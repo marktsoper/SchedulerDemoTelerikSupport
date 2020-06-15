@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div>
+
+        @(Html.Kendo().Scheduler<TimeLineEntryViewModel>()
+        .Name("scheduler")
+        .Editable(false)
+        .Selectable(false)
+        //.Events(e =>e.Navigate("schedulerNavigate"))
+        .Date(new DateTime(2020, 6, 15).ToUniversalTime())
+        .CurrentTimeMarker(false)
+        .StartTime(new DateTime(2020, 6, 15).ToUniversalTime())
+        .MajorTick(60)
+        .Views(views =>
+        {
+            views.TimelineView(timeline => timeline.EventHeight(50)).MajorTimeHeaderTemplate("<strong>#=kendo.toString(date, 'hh:30 tt') #</strong>");
+        })
+
+        .Group(group => group.Resources("Areas").Orientation(SchedulerGroupOrientation.Vertical))
+        .Resources(resource =>
+        {
+            resource.Add(m => m.LocationAreaId)
+            .Title("Area")
+            .Name("Areas")
+            .DataTextField("LocationAreaName")
+            .DataValueField("LocationAreaId")
+            .DataColorField("Color")
+            .BindTo(new List<TimeLineArea> {
+                new TimeLineArea
+                {
+                    LocationAreaId = new Guid("00000000-0000-0000-0000-000000000000"),
+                    LocationAreaName =  "Neli's Office"
+                }
+            });;
+
+        })
+        .DataSource(d => d
+        .Model(m =>
+        {
+            m.Id(f => f.EntryId);
+            m.Field(f => f.Title).DefaultValue("");
+        })
+        .Read("TimeLineViewRead", "Home" )    ))
+
+
+
+
+
+    </div>
+
+<div>
+    <img src="/desired_layout.png" />
+
+</div>
